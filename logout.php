@@ -1,6 +1,6 @@
-﻿<?php
+<?php
 /**
- * logout.php — Handler Logout Nasabah BSU FMIPA UNM
+ * logout.php � Handler Logout Nasabah BSU FMIPA UNM
  */
 session_start();
 
@@ -23,4 +23,5 @@ session_destroy();
 header("Location: index.php");
 exit;
 ?>
+
 

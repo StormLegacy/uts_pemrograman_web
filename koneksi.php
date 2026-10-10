@@ -20,3 +20,4 @@ if (!$koneksi) {
 // Set charset agar mendukung karakter Indonesia
 mysqli_set_charset($koneksi, 'utf8');
 ?>
+

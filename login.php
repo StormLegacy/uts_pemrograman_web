@@ -106,9 +106,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex me-2 my-2 my-lg-0" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Cari sesuatu..." aria-label="Search">
-                    <button class="btn btn-green" type="submit"><i class="fa-solid fa-magnifying-glass me-1"></i>Cari</button>
+                <form class="d-flex me-2 my-2 my-lg-0" role="search" style="max-width: 200px;">
+                    <input class="form-control form-control-sm me-1" type="search" placeholder="Cari..." aria-label="Search">
+                    <button class="btn btn-green btn-sm" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
                 <div class="auth-nav-container">
                     <a href="login.php" class="btn btn-auth-nav btn-sm px-3 active">
@@ -130,8 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         
                         <div class="text-center mb-4">
                             <img src="images/logo_BSU.png" alt="Logo BSU" class="mb-3" style="height: 55px; width: auto; object-fit: contain;">
-                            <h4 class="fw-bold text-dark mb-1">Masuk Akun Nasabah</h4>
-                            <p class="text-muted small mb-0">Area Pengguna / Nasabah Bank Sampah Unit FMIPA UNM</p>
+                            <h4 class="fw-bold text-dark mb-1">Masuk Akun BSU FMIPA</h4>
+                            <p class="text-muted small mb-0">Portal Layanan Nasabah &amp; Panel Pengelola Administrator</p>
                         </div>
 
                         <!-- Pesan Error / Sukses dari PHP -->
@@ -180,17 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                     </button>
                                 </div>
                             </div>
-
-                            <div class="mb-3">
-                                <label class="form-label small fw-bold text-dark">Peran Civitas</label>
-                                <select class="form-select" id="loginPageRole" name="peran">
-                                    <option value="Mahasiswa Aktif" <?= (($_POST['peran'] ?? '') === 'Mahasiswa Aktif') ? 'selected' : '' ?>>Mahasiswa FMIPA UNM</option>
-                                    <option value="Dosen"           <?= (($_POST['peran'] ?? '') === 'Dosen')           ? 'selected' : '' ?>>Dosen FMIPA UNM</option>
-                                    <option value="Tenaga Kependidikan" <?= (($_POST['peran'] ?? '') === 'Tenaga Kependidikan') ? 'selected' : '' ?>>Tenaga Kependidikan (Tendik)</option>
-                                    <option value="Mitra Eksternal" <?= (($_POST['peran'] ?? '') === 'Mitra Eksternal') ? 'selected' : '' ?>>Mitra / Warga Eksternal</option>
-                                </select>
-                            </div>
-
+                            
                             <div class="d-grid gap-2 mt-4 mb-3">
                                 <button type="submit" class="btn btn-green fw-bold py-2 shadow-sm">
                                     <i class="fa-solid fa-right-to-bracket me-2"></i> Masuk Sekarang
@@ -205,7 +195,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </a>
                             <p>Atau</p>
                             <a href="contact.php" class="btn btn-sm btn-outline-success fw-bold">
-                                <i class="fa-solid fa-envelope me-1"></i> Hubungi Pengurus di Pos Parantambung
+                                <i class="fa-solid fa-envelope me-1"></i> Hubungi Pengurus BSU
                             </a>
                         </div>
 
@@ -270,7 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=2.2"></script>
     <script>
         // Toggle lihat/sembunyikan kata sandi
         document.getElementById('togglePassword')?.addEventListener('click', function () {

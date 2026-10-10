@@ -24,24 +24,49 @@ if (!$user) {
     exit;
 }
 
-// 2. Ambil total akumulasi berat sampah organik dan anorganik dari tabel 'setor_sampah'
-$q_sampah = mysqli_prepare($koneksi, 'SELECT kategori, SUM(berat) as total_berat FROM setor_sampah WHERE id_user = ? GROUP BY kategori');
-mysqli_stmt_bind_param($q_sampah, 'i', $nasabah_id);
-mysqli_stmt_execute($q_sampah);
-$res_sampah = mysqli_stmt_get_result($q_sampah);
+$isAdmin = (isset($user['role']) && strtolower(trim($user['role'])) === 'admin') || (isset($user['status_civitas']) && stripos($user['status_civitas'], 'admin') !== false);
 
-$total_organik = 0;
-$total_anorganik = 0;
-
-while ($row_s = mysqli_fetch_assoc($res_sampah)) {
-    $kat = trim(strtolower($row_s['kategori']));
-    if ($kat === 'organik') {
-        $total_organik = floatval($row_s['total_berat']);
-    } elseif ($kat === 'anorganik') {
-        $total_anorganik = floatval($row_s['total_berat']);
+// 2. Ambil akumulasi berat sampah organik dan anorganik
+if ($isAdmin) {
+    // Admin melihat total akumulasi seluruh nasabah bank sampah
+    $q_sampah = mysqli_query($koneksi, 'SELECT kategori, SUM(berat) as total_berat FROM setor_sampah GROUP BY kategori');
+    $total_organik = 0;
+    $total_anorganik = 0;
+    if ($q_sampah) {
+        while ($row_s = mysqli_fetch_assoc($q_sampah)) {
+            $kat = trim(strtolower($row_s['kategori']));
+            if ($kat === 'organik') {
+                $total_organik = floatval($row_s['total_berat']);
+            } elseif ($kat === 'anorganik') {
+                $total_anorganik = floatval($row_s['total_berat']);
+            }
+        }
     }
+    // Statistik khusus admin: total nasabah & total transaksi
+    $r_users = mysqli_query($koneksi, "SELECT COUNT(*) as total_users, SUM(saldo) as total_kas FROM users WHERE role != 'admin'");
+    $d_users = mysqli_fetch_assoc($r_users);
+    $total_nasabah = (int)($d_users['total_users'] ?? 0);
+    $total_kas     = (float)($d_users['total_kas'] ?? 0);
+} else {
+    // Nasabah biasa melihat data miliknya sendiri
+    $q_sampah = mysqli_prepare($koneksi, 'SELECT kategori, SUM(berat) as total_berat FROM setor_sampah WHERE id_user = ? GROUP BY kategori');
+    mysqli_stmt_bind_param($q_sampah, 'i', $nasabah_id);
+    mysqli_stmt_execute($q_sampah);
+    $res_sampah = mysqli_stmt_get_result($q_sampah);
+
+    $total_organik = 0;
+    $total_anorganik = 0;
+
+    while ($row_s = mysqli_fetch_assoc($res_sampah)) {
+        $kat = trim(strtolower($row_s['kategori']));
+        if ($kat === 'organik') {
+            $total_organik = floatval($row_s['total_berat']);
+        } elseif ($kat === 'anorganik') {
+            $total_anorganik = floatval($row_s['total_berat']);
+        }
+    }
+    mysqli_stmt_close($q_sampah);
 }
-mysqli_stmt_close($q_sampah);
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -91,15 +116,10 @@ mysqli_stmt_close($q_sampah);
                             <li><a class="dropdown-item" href="contact.php">Hubungi Kami</a></li>
                         </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active fw-bold" href="profile.php">
-                            <i class="fa-solid fa-id-badge me-1 text-success"></i>Profil Saya
-                        </a>
-                    </li>
                 </ul>
-                <form class="d-flex me-2 my-2 my-lg-0" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Cari sesuatu..." aria-label="Search">
-                    <button class="btn btn-green" type="submit"><i class="fa-solid fa-magnifying-glass me-1"></i>Cari</button>
+                <form class="d-flex me-2 my-2 my-lg-0" role="search" style="max-width:200px;">
+                    <input class="form-control form-control-sm me-1" type="search" placeholder="Cari..." aria-label="Search">
+                    <button class="btn btn-green btn-sm" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
                 <div class="auth-nav-container">
                     <div class="dropdown">
@@ -108,11 +128,9 @@ mysqli_stmt_close($q_sampah);
                             <span class="d-none d-sm-inline fw-semibold"><?= htmlspecialchars(explode(' ', $user['nama_lengkap'])[0]) ?></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><h6 class="dropdown-header text-muted"><i class="fa-solid fa-id-card me-1 text-success"></i><?= htmlspecialchars($user['nim_nip']) ?></h6></li>
-                            <li><span class="dropdown-header text-muted" style="font-size:.75rem;display:block;padding:0 1rem .25rem;"><?= htmlspecialchars($user['status_civitas']) ?></span></li>
-                            <li><a class="dropdown-item" href="profile.php"><i class="fa-solid fa-user me-2 text-success"></i>Profil &amp; Saldo</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="logout.php" onclick="return confirm('Yakin ingin keluar dari akun BSU?')"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Keluar (Logout)</a></li>
+                            <li><a class="dropdown-item py-2" href="profile.php"><?= $isAdmin ? 'Profil Administrator' : 'Profil &amp; Saldo' ?></a></li>
+                            <li><hr class="dropdown-divider my-1"></li>
+                            <li><a class="dropdown-item py-2 text-danger" href="logout.php" onclick="return confirm('Yakin ingin keluar dari akun BSU?')">Keluar (Logout)</a></li>
                         </ul>
                     </div>
                 </div>
@@ -150,9 +168,15 @@ mysqli_stmt_close($q_sampah);
         <div class="banner-box-style p-4 p-md-5 mb-4 shadow-sm">
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
+                    <?php if ($isAdmin): ?>
+                    <span class="badge bg-warning text-dark px-3 py-2 text-uppercase mb-2 fw-bold"><i class="fa-solid fa-user-shield me-1"></i> Hak Akses: Administrator BSU</span>
+                    <h2 class="fw-bold mb-1 text-white">Panel Dashboard Administrator</h2>
+                    <p class="text-light opacity-75 mb-0 small">Kelola seluruh data transaksi penyetoran, pantau sirkulasi sampah kampus, dan rekapitulasi nasabah BSU FMIPA UNM.</p>
+                    <?php else: ?>
                     <span class="badge bg-success px-3 py-2 text-uppercase mb-2"><i class="fa-solid fa-shield-halved me-1"></i> Area Nasabah Terverifikasi</span>
                     <h2 class="fw-bold mb-1 text-white">Buku Tabungan Sampah Civitas MIPA</h2>
                     <p class="text-light opacity-75 mb-0 small">Pantau saldo tabungan rupiah, perolehan poin reward, dan catatan histori penyetoran sampah Anda secara transparan.</p>
+                    <?php endif; ?>
                 </div>
                 <div>
                     <button class="btn btn-green fw-bold px-4 py-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#modalSetorSampah">
@@ -164,42 +188,53 @@ mysqli_stmt_close($q_sampah);
 
         <div class="row g-4">
             
-            <!-- 1. BIODATA CIVITAS AKADEMIKA -->
+            <!-- 1. BIODATA PENGGUNA / ADMINISTRATOR -->
             <div class="col-lg-4">
                 <div class="profile-card p-4 h-100">
                     <div class="text-center pb-4 border-bottom mb-4">
                         <div class="position-relative d-inline-block mb-3">
-                            <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center mx-auto shadow" style="width: 90px; height: 90px; font-size: 2.2rem; font-weight: bold;">
-                                <i class="fa-solid fa-user-graduate"></i>
+                            <div class="<?= $isAdmin ? 'bg-dark text-warning border border-2 border-warning' : 'bg-success text-white' ?> rounded-circle d-flex align-items-center justify-content-center mx-auto shadow" style="width: 90px; height: 90px; font-size: 2.2rem; font-weight: bold;">
+                                <i class="fa-solid <?= $isAdmin ? 'fa-user-shield' : 'fa-user-graduate' ?>"></i>
                             </div>
                         </div>
                         <h5 class="fw-bold text-dark mb-1"><?= htmlspecialchars($user['nama_lengkap']) ?></h5>
+                        <?php if ($isAdmin): ?>
+                        <span class="badge bg-warning-subtle text-dark border border-warning fw-bold px-3 py-1">Administrator Utama</span>
+                        <div class="text-muted small mt-2">ID Admin: <span class="fw-bold font-monospace text-dark">ADM-MIPA-<?= str_pad($nasabah_id, 3, '0', STR_PAD_LEFT) ?></span></div>
+                        <?php else: ?>
                         <span class="badge bg-success-subtle text-success fw-semibold px-3 py-1"><?= htmlspecialchars($user['status_civitas']) ?></span>
                         <div class="text-muted small mt-2">No. Rekening BSU: <span class="fw-bold font-monospace text-dark">BSU-MIPA-<?= str_pad($nasabah_id, 4, '0', STR_PAD_LEFT) ?></span></div>
+                        <?php endif; ?>
                     </div>
 
-                    <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-id-card text-success me-2"></i>Biodata Nasabah</h6>
+                    <h6 class="fw-bold text-dark mb-3"><i class="fa-solid fa-id-card text-success me-2"></i><?= $isAdmin ? 'Profil Administrator' : 'Biodata Nasabah' ?></h6>
                     
-                    <!-- Bagian Biodata di profile.php -->
                     <div class="mb-3">
-                        <div class="text-muted small">NIM / NIP / No. Identitas</div>
+                        <div class="text-muted small"><?= $isAdmin ? 'Username / NIP Admin' : 'NIM / NIP / No. Identitas' ?></div>
                         <div class="fw-bold text-dark" id="profileNIM"><?= htmlspecialchars($user['nim_nip']) ?></div>
                     </div>
 
                     <div class="mb-3">
-                        <div class="text-muted small">Program Studi / Instansi</div>
-                        <div class="fw-bold text-dark" id="profileProdi"><?= htmlspecialchars($user['prodi_unit'] ?? 'Umum') ?></div>
+                        <div class="text-muted small"><?= $isAdmin ? 'Jabatan / Posisi' : 'Program Studi / Instansi' ?></div>
+                        <div class="fw-bold text-dark" id="profileProdi"><?= htmlspecialchars($isAdmin ? 'Pengelola & Tim Teknis BSU' : ($user['prodi_unit'] ?? 'Umum')) ?></div>
                     </div>
 
                     <div class="mb-3">
-                        <div class="text-muted small">Fakultas / Unit Kerja</div>
+                        <div class="text-muted small">Unit Kerja / Fakultas</div>
                         <div class="fw-bold text-dark"><?= htmlspecialchars($user['nama_fakultas'] ?? 'Bank Sampah Unit (BSU) FMIPA UNM') ?></div>
                     </div>
 
                     <div class="mb-3">
-                        <div class="text-muted small">Nomor WhatsApp / HP</div>
+                        <div class="text-muted small">Kontak Resmi</div>
                         <div class="fw-bold text-dark"><?= htmlspecialchars($user['no_hp'] ?? '-') ?></div>
                     </div>
+
+                    <?php if ($isAdmin): ?>
+                    <div class="p-3 bg-light rounded-3 border mt-3">
+                        <span class="small fw-bold text-success d-block mb-1"><i class="fa-solid fa-circle-check me-1"></i> Otoritas Khusus:</span>
+                        <p class="small text-muted mb-0">Dapat memantau dan mengelola transaksi seluruh nasabah Bank Sampah Unit FMIPA UNM.</p>
+                    </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -207,6 +242,31 @@ mysqli_stmt_close($q_sampah);
             <div class="col-lg-8">
                 
                 <div class="row g-3 mb-4">
+                    <?php if ($isAdmin): ?>
+                    <!-- Total Kas Nasabah BSU -->
+                    <div class="col-md-6">
+                        <div class="stat-card-custom stat-card-green">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-uppercase small fw-bold opacity-75">Total Saldo Seluruh Nasabah</span>
+                                <i class="fa-solid fa-vault fs-3 opacity-75"></i>
+                            </div>
+                            <h2 class="fw-bold mb-1">Rp <?= number_format($total_kas, 0, ',', '.') ?></h2>
+                            <p class="small opacity-75 mb-0">Total akumulasi tabungan nasabah aktif</p>
+                        </div>
+                    </div>
+
+                    <!-- Total Nasabah Terdaftar -->
+                    <div class="col-md-6">
+                        <div class="stat-card-custom stat-card-emerald">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="text-uppercase small fw-bold opacity-75">Total Nasabah Terdaftar</span>
+                                <i class="fa-solid fa-users fs-3 opacity-75"></i>
+                            </div>
+                            <h2 class="fw-bold mb-1"><?= number_format($total_nasabah, 0, ',', '.') ?> Nasabah</h2>
+                            <p class="small opacity-75 mb-0">Civitas akademika &amp; mitra masyarakat</p>
+                        </div>
+                    </div>
+                    <?php else: ?>
                     <!-- Saldo Tabungan (Hijau Utama) -->
                     <div class="col-md-6">
                         <div class="stat-card-custom stat-card-green">
@@ -230,12 +290,13 @@ mysqli_stmt_close($q_sampah);
                             <p class="small opacity-75 mb-0">Tukarkan produk eco-enzyme / bibit tanaman</p>
                         </div>
                     </div>
+                    <?php endif; ?>
 
                     <!-- Akumulasi Sampah Organik (Hijau Segar) -->
                     <div class="col-md-6">
                         <div class="stat-card-custom stat-card-forest">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-uppercase small fw-bold opacity-75">Sampah Organik Disetor</span>
+                                <span class="text-uppercase small fw-bold opacity-75"><?= $isAdmin ? 'Total Sampah Organik Kampus' : 'Sampah Organik Disetor' ?></span>
                                 <i class="fa-solid fa-leaf fs-3 opacity-75"></i>
                             </div>
                             <h3 class="fw-bold mb-1"><?= number_format($total_organik, 1, ',', '.') ?> Kg</h3>
@@ -247,7 +308,7 @@ mysqli_stmt_close($q_sampah);
                     <div class="col-md-6">
                         <div class="stat-card-custom stat-card-dark">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="text-uppercase small fw-bold opacity-75">Sampah Anorganik Disetor</span>
+                                <span class="text-uppercase small fw-bold opacity-75"><?= $isAdmin ? 'Total Sampah Anorganik Kampus' : 'Sampah Anorganik Disetor' ?></span>
                                 <i class="fa-solid fa-recycle fs-3 opacity-75"></i>
                             </div>
                             <h3 class="fw-bold mb-1"><?= number_format($total_anorganik, 1, ',', '.') ?> Kg</h3>
@@ -256,12 +317,19 @@ mysqli_stmt_close($q_sampah);
                     </div>
                 </div>
 
+
+
                 <!-- 3. RIWAYAT PENYETORAN SAMPAH -->
                 <div class="profile-card p-4">
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
                         <div>
-                            <h5 class="fw-bold text-dark mb-0"><i class="fa-solid fa-clock-rotate-left text-success me-2"></i>Riwayat Penyetoran Sampah</h5>
-                            <small class="text-muted">Daftar transaksi penimbangan dan konversi saldo tabungan Anda</small>
+                            <h5 class="fw-bold text-dark mb-0">
+                                <i class="fa-solid <?= $isAdmin ? 'fa-table-list' : 'fa-clock-rotate-left' ?> text-success me-2"></i>
+                                <?= $isAdmin ? 'Semua Rekap Riwayat Transaksi Nasabah' : 'Riwayat Penyetoran Sampah' ?>
+                            </h5>
+                            <small class="text-muted">
+                                <?= $isAdmin ? 'Daftar seluruh transaksi penimbangan sampah civitas akademika BSU FMIPA UNM' : 'Daftar transaksi penimbangan dan konversi saldo tabungan Anda' ?>
+                            </small>
                         </div>
                     </div>
 
@@ -271,6 +339,7 @@ mysqli_stmt_close($q_sampah);
                                 <tr>
                                     <th class="small">Tanggal</th>
                                     <th class="small">ID Setor</th>
+                                    <?php if ($isAdmin): ?><th class="small">Nasabah</th><?php endif; ?>
                                     <th class="small">Kategori</th>
                                     <th class="small">Rincian Jenis</th>
                                     <th class="small text-end">Berat</th>
@@ -281,12 +350,17 @@ mysqli_stmt_close($q_sampah);
                             </thead>
                             <tbody>
                                 <?php
-                                $q_hist = mysqli_prepare($koneksi, "SELECT * FROM setor_sampah WHERE id_user = ? ORDER BY tanggal DESC, id_setor DESC");
-                                mysqli_stmt_bind_param($q_hist, 'i', $nasabah_id);
-                                mysqli_stmt_execute($q_hist);
-                                $res_hist = mysqli_stmt_get_result($q_hist);
+                                if ($isAdmin) {
+                                    $q_hist_sql = "SELECT s.*, u.nama_lengkap as nama_nasabah FROM setor_sampah s LEFT JOIN users u ON s.id_user = u.id_user ORDER BY s.tanggal DESC, s.id_setor DESC";
+                                    $res_hist = mysqli_query($koneksi, $q_hist_sql);
+                                } else {
+                                    $q_hist = mysqli_prepare($koneksi, "SELECT * FROM setor_sampah WHERE id_user = ? ORDER BY tanggal DESC, id_setor DESC");
+                                    mysqli_stmt_bind_param($q_hist, 'i', $nasabah_id);
+                                    mysqli_stmt_execute($q_hist);
+                                    $res_hist = mysqli_stmt_get_result($q_hist);
+                                }
 
-                                if (mysqli_num_rows($res_hist) > 0) {
+                                if ($res_hist && mysqli_num_rows($res_hist) > 0) {
                                     while ($row = mysqli_fetch_assoc($res_hist)) {
                                         $badge = strtolower($row['kategori']) === 'organik'
                                             ? 'bg-success-subtle text-success'
@@ -296,10 +370,12 @@ mysqli_stmt_close($q_sampah);
                                         $jenis = htmlspecialchars($row['jenis_sampah']);
                                         $berat = htmlspecialchars($row['berat']);
                                         $tgl   = htmlspecialchars($row['tanggal']);
+                                        $nasabah_col = $isAdmin ? "<td class='small fw-semibold text-dark'>" . htmlspecialchars($row['nama_nasabah'] ?? 'Nasabah') . "</td>" : "";
                                         echo "
                                         <tr>
                                             <td class='small'>{$tgl}</td>
                                             <td class='small fw-bold font-monospace text-dark'>STR-" . str_pad($id, 4, '0', STR_PAD_LEFT) . "</td>
+                                            {$nasabah_col}
                                             <td class='small'><span class='badge {$badge} px-2 py-1'>{$kat}</span></td>
                                             <td class='small'>{$jenis}</td>
                                             <td class='small text-end fw-bold'>" . number_format($row['berat'], 1, ',', '.') . " Kg</td>
@@ -333,22 +409,22 @@ mysqli_stmt_close($q_sampah);
                                         </tr>";
                                     }
                                 } else {
-                                    echo "<tr><td colspan='8' class='text-center text-muted small py-4'>
+                                    $col_span = $isAdmin ? 9 : 8;
+                                    echo "<tr><td colspan='{$col_span}' class='text-center text-muted small py-4'>
                                         <i class='fa-solid fa-inbox fs-3 d-block mb-2 text-secondary'></i>
                                         Belum ada riwayat penyetoran sampah.
                                     </td></tr>";
                                 }
-                                mysqli_stmt_close($q_hist);
+                                if (!$isAdmin && isset($q_hist)) {
+                                    mysqli_stmt_close($q_hist);
+                                }
                                 ?>
                             </tbody>
                         </table>
                     </div>
 
-                    <div class="d-flex justify-content-between align-items-center pt-3 mt-3 border-top flex-wrap gap-2">
+                    <div class="pt-3 mt-3 border-top">
                         <small class="text-muted"><i class="fa-solid fa-circle-info text-success me-1"></i> Klik <strong>Edit</strong> untuk mengubah data atau <strong>Hapus</strong> untuk membatalkan penyetoran.</small>
-                        <button class="btn btn-green btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#modalSetorSampah">
-                            <i class="fa-solid fa-plus-circle me-1"></i> Input Setor Sampah
-                        </button>
                     </div>
                 </div>
 
@@ -376,7 +452,7 @@ mysqli_stmt_close($q_sampah);
 
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Kategori Sampah</label>
-                            <select class="form-select" name="kategori" required>
+                            <select class="form-select" name="kategori" id="tambahKategori" required>
                                 <option value="Anorganik" selected>Sampah Anorganik (Plastik, Kertas, Logam)</option>
                                 <option value="Organik">Sampah Organik (Sisa Buah, Sayur, Dedaunan)</option>
                             </select>
@@ -384,14 +460,8 @@ mysqli_stmt_close($q_sampah);
 
                         <div class="mb-3">
                             <label class="form-label small fw-bold">Rincian Jenis Sampah</label>
-                            <select class="form-select" name="jenis_sampah" required>
-                                <option value="Botol Plastik PET Bersih" selected>Botol Plastik PET Bersih (Rp 4.000/Kg | +8 Poin)</option>
-                                <option value="Gelas Plastik Mineral">Gelas Plastik Mineral (Rp 3.500/Kg | +7 Poin)</option>
-                                <option value="Kardus Bekas Paket Tebal">Kardus Bekas Paket Tebal (Rp 3.000/Kg | +6 Poin)</option>
-                                <option value="Kertas HVS Bekas Laporan/Ujian">Kertas HVS Bekas Laporan/Ujian (Rp 2.500/Kg | +5 Poin)</option>
-                                <option value="Kaleng Minuman Aluminium">Kaleng Minuman Aluminium (Rp 10.000/Kg | +20 Poin)</option>
-                                <option value="Sisa Kulit Buah Segar (Bahan Eco-Enzyme)">Sisa Kulit Buah Segar – Eco-Enzyme (Rp 1.000/Kg | +3 Poin)</option>
-                                <option value="Dedaunan Kering Gugur Kampus">Dedaunan Kering Gugur Kampus (Rp 1.000/Kg | +3 Poin)</option>
+                            <select class="form-select" name="jenis_sampah" id="tambahJenis" required>
+                                <!-- Opsi terisi otomatis via JavaScript berdasarkan kategori -->
                             </select>
                         </div>
 
@@ -568,8 +638,68 @@ mysqli_stmt_close($q_sampah);
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=2.2"></script>
     <script>
+    // Data pilihan jenis sampah per kategori
+    const daftarSampah = {
+        'Anorganik': [
+            { val: "Botol Plastik PET Bersih", text: "Botol Plastik PET Bersih (Rp 4.000/Kg | +8 Poin)" },
+            { val: "Gelas Plastik Mineral", text: "Gelas Plastik Mineral (Rp 3.500/Kg | +7 Poin)" },
+            { val: "Kardus Bekas Paket Tebal", text: "Kardus Bekas Paket Tebal (Rp 3.000/Kg | +6 Poin)" },
+            { val: "Kertas HVS Bekas Laporan/Ujian", text: "Kertas HVS Bekas Laporan/Ujian (Rp 2.500/Kg | +5 Poin)" },
+            { val: "Kaleng Minuman Aluminium", text: "Kaleng Minuman Aluminium (Rp 10.000/Kg | +20 Poin)" }
+        ],
+        'Organik': [
+            { val: "Sisa Kulit Buah Segar (Bahan Eco-Enzyme)", text: "Sisa Kulit Buah Segar – Eco-Enzyme (Rp 1.000/Kg | +3 Poin)" },
+            { val: "Dedaunan Kering Gugur Kampus", text: "Dedaunan Kering Gugur Kampus (Rp 1.000/Kg | +3 Poin)" }
+        ]
+    };
+
+    // Fungsi untuk memperbarui pilihan jenis sampah berdasarkan kategori
+    function updateJenisOptions(selectKategori, selectJenis, selectedValue = null) {
+        const kat = selectKategori.value;
+        const list = daftarSampah[kat] || [];
+        selectJenis.innerHTML = '';
+
+        list.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.val;
+            opt.textContent = item.text;
+            if (selectedValue && item.val === selectedValue) {
+                opt.selected = true;
+            }
+            selectJenis.appendChild(opt);
+        });
+
+        // Jika selectedValue tidak ditemukan di list tapi ada nilai sebelumnya
+        if (selectedValue && !list.some(item => item.val === selectedValue)) {
+            const optCustom = document.createElement('option');
+            optCustom.value = selectedValue;
+            optCustom.textContent = selectedValue;
+            optCustom.selected = true;
+            selectJenis.prepend(optCustom);
+        }
+    }
+
+    // Inisialisasi event listener untuk Modal Tambah
+    const tambahKat = document.getElementById('tambahKategori');
+    const tambahJen = document.getElementById('tambahJenis');
+    if (tambahKat && tambahJen) {
+        updateJenisOptions(tambahKat, tambahJen);
+        tambahKat.addEventListener('change', function() {
+            updateJenisOptions(tambahKat, tambahJen);
+        });
+    }
+
+    // Inisialisasi event listener untuk Modal Edit saat user ganti kategori manual
+    const editKat = document.getElementById('editKategori');
+    const editJen = document.getElementById('editJenis');
+    if (editKat && editJen) {
+        editKat.addEventListener('change', function() {
+            updateJenisOptions(editKat, editJen);
+        });
+    }
+
     // Populate Modal Edit saat tombol edit diklik
     document.querySelectorAll('.btn-edit').forEach(function(btn) {
         btn.addEventListener('click', function() {
@@ -578,27 +708,15 @@ mysqli_stmt_close($q_sampah);
             document.getElementById('editBerat').value    = this.dataset.berat;
 
             // Set select Kategori
-            const selKat = document.getElementById('editKategori');
-            for (let opt of selKat.options) {
-                opt.selected = (opt.value === this.dataset.kategori);
+            const targetKat = this.dataset.kategori;
+            const targetJen = this.dataset.jenis;
+
+            for (let opt of editKat.options) {
+                opt.selected = (opt.value.toLowerCase() === targetKat.toLowerCase());
             }
 
-            // Set select Jenis
-            const selJenis = document.getElementById('editJenis');
-            let found = false;
-            for (let opt of selJenis.options) {
-                if (opt.value === this.dataset.jenis) {
-                    opt.selected = true;
-                    found = true;
-                } else {
-                    opt.selected = false;
-                }
-            }
-            if (!found) {
-                selJenis.options[0].text  = this.dataset.jenis;
-                selJenis.options[0].value = this.dataset.jenis;
-                selJenis.selectedIndex    = 0;
-            }
+            // Perbarui pilihan jenis berdasarkan kategori dan pilih jenis yang sesuai
+            updateJenisOptions(editKat, editJen, targetJen);
         });
     });
 

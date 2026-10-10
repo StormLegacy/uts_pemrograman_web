@@ -14,10 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password     = $_POST['password'] ?? '';
     $nama_lengkap = trim($_POST['nama_lengkap'] ?? '');
     $status_civ   = $_POST['status_civitas'] ?? 'Mahasiswa Aktif';
-    $prodi_unit   = trim($_POST['prodi_unit'] ?? '');
-    $email        = trim($_POST['email'] ?? '');
-    $no_hp        = trim($_POST['no_hp'] ?? '');
-
+    
+    // Ubah string kosong menjadi NULL agar tersimpan sebagai NULL di database
+    $prodi_unit   = !empty(trim($_POST['prodi_unit'] ?? '')) ? trim($_POST['prodi_unit']) : null;
+    $email        = !empty(trim($_POST['email'] ?? '')) ? trim($_POST['email']) : null;
+    $no_hp        = !empty(trim($_POST['no_hp'] ?? '')) ? trim($_POST['no_hp']) : null;
+    
     if (empty($nim_nip) || empty($password) || empty($nama_lengkap)) {
         $error_msg = "NIM/NIP/Username, Kata Sandi, dan Nama Lengkap wajib diisi.";
     } else {

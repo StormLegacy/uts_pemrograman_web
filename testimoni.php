@@ -50,9 +50,9 @@ require_once 'koneksi.php';
                         </ul>
                     </li>
                 </ul>
-                <form class="d-flex me-2 my-2 my-lg-0" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Cari sesuatu..." aria-label="Search">
-                    <button class="btn btn-green" type="submit"><i class="fa-solid fa-magnifying-glass me-1"></i>Cari</button>
+                <form class="d-flex me-2 my-2 my-lg-0" role="search" style="max-width: 200px;">
+                    <input class="form-control form-control-sm me-1" type="search" placeholder="Cari..." aria-label="Search">
+                    <button class="btn btn-green btn-sm" type="submit"><i class="fa-solid fa-magnifying-glass"></i></button>
                 </form>
                 <div class="auth-nav-container">
                     <a href="login.php" class="btn btn-auth-nav btn-sm px-3">
@@ -354,6 +354,7 @@ require_once 'koneksi.php';
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/jquery.js"></script>
-    <script src="js/script.js"></script>
+    <script src="js/script.js?v=2.2"></script>
 </body>
 </html>
+

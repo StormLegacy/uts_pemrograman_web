@@ -61,6 +61,8 @@ async function updateNavbarAuth() {
     authContainers.forEach(container => {
         if (session.loggedIn) {
             const firstName = (session.nama || 'Nasabah').split(' ')[0];
+            const isAdmin = (session.peran && session.peran.toLowerCase() === 'admin') || (session.nama && session.nama.toLowerCase().includes('admin'));
+            const profileLabel = isAdmin ? 'Profil Administrator' : 'Profil &amp; Saldo';
             container.innerHTML = `
                 <div class="dropdown">
                     <button class="btn btn-outline-light btn-sm dropdown-toggle d-flex align-items-center gap-2"
@@ -69,24 +71,12 @@ async function updateNavbarAuth() {
                         <span class="d-none d-sm-inline fw-semibold">${firstName}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow">
+                        <li><a class="dropdown-item py-2" href="profile.php">${profileLabel}</a></li>
+                        <li><hr class="dropdown-divider my-1"></li>
                         <li>
-                            <h6 class="dropdown-header text-muted">
-                                <i class="fa-solid fa-id-card me-1 text-success"></i>${session.nim || ''}
-                            </h6>
-                        </li>
-                        <li>
-                            <span class="dropdown-header text-muted" style="font-size:0.75rem;display:block;padding:0 1rem .25rem;">
-                                ${session.peran || 'Nasabah BSU'}
-                            </span>
-                        </li>
-                        <li><a class="dropdown-item" href="profile.php">
-                            <i class="fa-solid fa-user me-2 text-success"></i>Profil &amp; Saldo
-                        </a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li>
-                            <a class="dropdown-item text-danger" href="logout.php"
+                            <a class="dropdown-item py-2 text-danger" href="logout.php"
                                onclick="return confirm('Yakin ingin keluar dari akun BSU?')">
-                                <i class="fa-solid fa-arrow-right-from-bracket me-2"></i>Keluar (Logout)
+                                Keluar (Logout)
                             </a>
                         </li>
                     </ul>
