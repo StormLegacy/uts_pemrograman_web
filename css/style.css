@@ -1,210 +1,670 @@
-        .btn-green {
-            background-color: #28a745;
-            color: white;
-        }
-        .btn-green:hover {
-            background-color: #218838;
-            color: white;
-        }
-        .stats-box {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-top: -50px;
-            position: relative;
-            z-index: 10;
-        }
-        .service-card {
-            border: 2px solid #28a745;
-            border-radius: 12px;
-            padding: 30px;
-            background: white;
-            transition: 0.3s;
-        }
-        .about-dark {
-            background-color: #2c3e50;
-            color: white;
-            padding: 80px 0;
-        }
-        footer {
-            background-color: #1a252f;
-            color: white;
-            padding: 50px 0 20px 0;
-        }
-        /* Merapikan Logo Navbar agar proporsional */
-        .navbar-brand img {
-            height: 45px;
-            width: auto;
-            object-fit: contain;
-        }
-        /* Mengatur Zona Aman Tinggi Carousel */
-        .carousel-item img {
-            height: 480px;
-            object-fit: cover;
-            object-position: center;
-        }
-        /* Membuat tombol navigasi carousel lebih kontras */
-        .carousel-control-prev, .carousel-control-next {
-            width: 5%;
-        }
-        .carousel-control-prev-icon, .carousel-control-next-icon {
-            background-color: rgba(0, 0, 0, 0.6);
-            background-size: 50%, 50%;
-            border-radius: 50% 50%; 
-            width: 45px;
-            height: 45px;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); 
-        }
-        .carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-        }
-        /* Mengubah tema navbar agar sama dengan footer */
-        .navbar-dark-custom {
-            background-color: #1a252f !important;
-        }
-        .navbar-dark-custom .navbar-nav .nav-link {
-            color: rgba(255, 255, 255, 0.85);
-        }
-        .navbar-dark-custom .navbar-nav .nav-link:hover, 
-        .navbar-dark-custom .navbar-nav .nav-link.active {
-            color: #ffffff !important;
-        }
-        .navbar-dark-custom .dropdown-menu {
-            background-color: #1a252f;
-            border-color: #2c3e50;
-        }
-        .navbar-dark-custom .dropdown-menu .dropdown-item {
-            color: rgba(255, 255, 255, 0.85);
-        }
-        .navbar-dark-custom .dropdown-menu .dropdown-item:hover {
-            background-color: #2c3e50;
-            color: #ffffff;
-        }
-        .navbar-dark-custom .dropdown-divider {
-            border-color: #2c3e50;
-        }
-        .service-card {
-            border: 2px solid #28a745;
-            border-radius: 12px;
-            padding: 30px;
-            background: white;
-            transition: 0.3s;
-            height: 100%; /* Membuat tinggi kotak rata secara otomatis */
-        }
-        /* Styling untuk Tagline Section */
-        .tagline-section {
-            background-color: #ffffff;
-            padding: 50px 0;
-        }
-        .tagline-section h1 {
-            color: #1a252f;
-            font-weight: 800;
-        }
-        .tagline-section p {
-            color: #555555;
-            font-size: 1.1rem;
-        }
-        .carousel-container-box {
-            border: 4px solid #ffffff; /* Bingkai putih tebal agar kontras */
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25); /* Bayangan yang lebih dalam dan tegas */
-            border-radius: 16px; /* Sudut lebih melengkung */
-            background-color: #ffffff;
-        }
-        /* Styling untuk News & Updates Section */
-        .news-section {
-            background-color: #f8f9fa;
-            padding: 60px 0;
-        }
-        .news-card {
-            background: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #e2e8f0;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
-        }
-        .news-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
-        }
-        .news-img {
-            height: 200px;
-            object-fit: cover;
-            width: 100%;
-        }
-        .news-date {
-            font-size: 0.85rem;
-            color: #718096;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-        .news-title {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: #1a252f;
-            line-height: 1.4;
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .news-title:hover {
-            color: #28a745;
-        }
+/* ==========================================================================
+   STYLE CSS - BANK SAMPAH UNIT (BSU) FMIPA UNM
+   Warna Utama: Hijau (#28a745 / #218838) & Dark Navy (#1a252f / #2c3e50)
+   ========================================================================== */
 
-        /* Efek Hover pada Tautan Footer Links */
-        footer ul.list-unstyled li a {
-            transition: color 0.2s ease, padding-left 0.2s ease;
-        }
+/* --- 1. CSS VARIABLES (DESIGN TOKENS) --- */
+:root {
+    --bsu-green: #28a745;
+    --bsu-green-hover: #218838;
+    --bsu-green-dark: #1e7e34;
+    --bsu-green-light: #e8f5e9;
+    --bsu-green-subtle: #d4edda;
+    --bsu-green-border: rgba(40, 167, 69, 0.25);
+    
+    --bsu-dark: #1a252f;
+    --bsu-dark-secondary: #2c3e50;
+    --bsu-dark-subtle: rgba(26, 37, 47, 0.05);
 
-        footer ul.list-unstyled li a:hover {
-            color: #68ff8b !important; /* Berubah menjadi warna hijau khas website */
-            text-decoration: underline !important;
-        }
-        /* Efek kotak banner menyerupai carousel */
-        .banner-box-style {
-            position: relative;
-            border: 4px solid #ffffff;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
-            border-radius: 16px;
-            background-color: #1a252f;
-            overflow: hidden;
-        }
+    --bsu-gray-bg: #f8f9fa;
+    --bsu-card-border: #e2e8f0;
+    --bsu-text-dark: #1a252f;
+    --bsu-text-muted: #6c757d;
 
-        /* Lapisan teks di atas gambar */
-        .banner-content-custom {
-            position: relative;
-            z-index: 2;
-            color: white;
-            text-align: center;
-            padding: 80px 20px;
-            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-        }
-        /* Perbaikan Navbar & Tombol Toggler Mobile */
-        .navbar-dark-custom {
-            background-color: #1a252f !important;
-        }
-        .navbar-toggler {
-            border-color: rgba(255, 255, 255, 0.5) !important;
-        }
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
-        }
-        
-        /* Perbaikan Logo di Navbar */
-        .navbar-brand img {
-            height: 40px !important;
-            width: auto !important;
-            max-width: 150px;
-            object-fit: contain;
-        }
+    --bsu-radius-sm: 8px;
+    --bsu-radius-md: 12px;
+    --bsu-radius-lg: 16px;
+    --bsu-radius-xl: 20px;
+    --bsu-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+    --bsu-shadow-md: 0 4px 15px rgba(0, 0, 0, 0.08);
+    --bsu-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
 
-        /* Penyesuaian Spasi Kartu Layanan agar tidak renggang di HP */
-        @media (max-width: 768px) {
-            .service-card {
-                margin-bottom: 15px;
-            }
-            .container {
-                padding-left: 15px;
-                padding-right: 15px;
-            }
-        }
-        
+/* --- 2. GLOBAL STYLES --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--bsu-text-dark);
+    background-color: var(--bsu-gray-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main, .main-content {
+    flex: 1 0 auto;
+}
+
+/* --- 3. TOMBOL UTAMA & KONSISTENSI WARNA --- */
+.btn-green {
+    background-color: var(--bsu-green) !important;
+    border-color: var(--bsu-green) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-radius: var(--bsu-radius-sm);
+    transition: all 0.2s ease;
+}
+
+.btn-green:hover,
+.btn-green:focus {
+    background-color: var(--bsu-green-hover) !important;
+    border-color: var(--bsu-green-hover) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.btn-outline-green {
+    background-color: transparent !important;
+    border: 1.5px solid var(--bsu-green) !important;
+    color: var(--bsu-green) !important;
+    font-weight: 600;
+    border-radius: var(--bsu-radius-sm);
+    transition: all 0.2s ease;
+}
+
+.btn-outline-green:hover,
+.btn-outline-green:focus {
+    background-color: var(--bsu-green) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.2);
+}
+
+.btn-auth-nav {
+    background-color: var(--bsu-green);
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: var(--bsu-radius-sm);
+    border: 1px solid var(--bsu-green);
+    transition: all 0.2s ease;
+}
+
+.btn-auth-nav:hover {
+    background-color: var(--bsu-green-hover);
+    color: #ffffff;
+    border-color: var(--bsu-green-dark);
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+.btn-whatsapp {
+    background-color: #25D366;
+    color: #ffffff;
+    font-weight: 600;
+    border-radius: var(--bsu-radius-sm);
+    transition: all 0.2s ease;
+}
+
+.btn-whatsapp:hover {
+    background-color: #1ebc59;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+/* --- 4. NAVBAR (SERAGAM DI SETIAP HALAMAN) --- */
+.navbar-dark-custom {
+    background-color: var(--bsu-dark) !important;
+    border-bottom: 2px solid var(--bsu-green);
+}
+
+.navbar-brand img {
+    height: 42px !important;
+    width: auto !important;
+    max-width: 150px;
+    object-fit: contain;
+}
+
+.navbar-dark-custom .navbar-nav .nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-weight: 500;
+    padding: 0.5rem 0.85rem;
+    transition: color 0.2s ease;
+}
+
+.navbar-dark-custom .navbar-nav .nav-link:hover {
+    color: #ffffff !important;
+}
+
+.navbar-dark-custom .navbar-nav .nav-link.active {
+    color: #ffffff !important;
+    font-weight: 700;
+    position: relative;
+}
+
+.navbar-dark-custom .navbar-nav .nav-link.active::after {
+    content: '';
+    display: block;
+    width: 20px;
+    height: 3px;
+    background-color: var(--bsu-green);
+    border-radius: 2px;
+    margin: 2px auto 0;
+}
+
+.navbar-dark-custom .dropdown-menu {
+    background-color: var(--bsu-dark);
+    border: 1px solid var(--bsu-dark-secondary);
+    border-radius: var(--bsu-radius-sm);
+    box-shadow: var(--bsu-shadow-md);
+}
+
+.navbar-dark-custom .dropdown-menu .dropdown-item {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.navbar-dark-custom .dropdown-menu .dropdown-item:hover,
+.navbar-dark-custom .dropdown-menu .dropdown-item.active {
+    background-color: var(--bsu-dark-secondary);
+    color: #ffffff;
+}
+
+.navbar-dark-custom .dropdown-divider {
+    border-color: var(--bsu-dark-secondary);
+}
+
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    padding: 0.35rem 0.65rem;
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+}
+
+/* --- 5. BANNER BOX / HERO SECTION (SERAGAM DI SETIAP SUBHALAMAN) --- */
+.banner-box-style {
+    position: relative;
+    border: 3px solid #ffffff;
+    box-shadow: var(--bsu-shadow-lg);
+    border-radius: var(--bsu-radius-lg);
+    background: linear-gradient(135deg, var(--bsu-dark) 0%, var(--bsu-dark-secondary) 100%);
+    overflow: hidden;
+    border-left: 6px solid var(--bsu-green);
+}
+
+.banner-content-custom {
+    position: relative;
+    z-index: 2;
+    color: #ffffff;
+    text-align: center;
+    padding: 60px 20px;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+}
+
+.banner-content-custom h1 {
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* Carousel Box di Index */
+.carousel-container-box {
+    border: 4px solid #ffffff;
+    box-shadow: var(--bsu-shadow-lg);
+    border-radius: var(--bsu-radius-lg);
+    background-color: #ffffff;
+}
+
+.carousel-item img {
+    height: 480px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.carousel-control-prev, .carousel-control-next {
+    width: 6%;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    background-color: rgba(26, 37, 47, 0.7);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    box-shadow: var(--bsu-shadow-sm);
+    transition: all 0.2s ease;
+}
+
+.carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+    background-color: var(--bsu-green);
+}
+
+/* --- 6. KARTU LAYANAN & STATISTIK --- */
+.service-card {
+    border: 1.5px solid var(--bsu-green);
+    border-radius: var(--bsu-radius-md);
+    padding: 30px;
+    background: #ffffff;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    height: 100%;
+}
+
+.service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 25px rgba(40, 167, 69, 0.18);
+    border-color: var(--bsu-green-hover);
+}
+
+.stats-box {
+    border-radius: var(--bsu-radius-lg);
+    box-shadow: var(--bsu-shadow-md);
+    border: 1px solid var(--bsu-card-border);
+    background: #ffffff;
+    margin-top: -50px;
+    position: relative;
+    z-index: 10;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stats-box:hover {
+    box-shadow: 0 15px 35px rgba(40, 167, 69, 0.12);
+}
+
+.stat-item {
+    padding: 10px 15px;
+}
+
+.stat-number {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--bsu-dark);
+    line-height: 1;
+}
+
+/* Tagline Section */
+.tagline-section {
+    background-color: #ffffff;
+    padding: 50px 0;
+}
+
+.tagline-section h1 {
+    color: var(--bsu-dark);
+    font-weight: 800;
+}
+
+.tagline-section p {
+    color: var(--bsu-text-muted);
+    font-size: 1.1rem;
+}
+
+/* --- 7. KARTU BERITA & ARSIP --- */
+.news-section {
+    background-color: var(--bsu-gray-bg);
+    padding: 60px 0;
+}
+
+.news-card {
+    background: #ffffff;
+    border-radius: var(--bsu-radius-md);
+    overflow: hidden;
+    border: 1px solid var(--bsu-card-border);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--bsu-shadow-md);
+    border-color: var(--bsu-green);
+}
+
+.news-img {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.news-date {
+    font-size: 0.85rem;
+    color: var(--bsu-green);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.news-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--bsu-dark);
+    line-height: 1.4;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.news-title:hover {
+    color: var(--bsu-green);
+}
+
+/* --- 8. STEP CARDS & BADGES --- */
+.step-card {
+    border-radius: var(--bsu-radius-md);
+    border: 1px dashed var(--bsu-green);
+    background-color: #fcfdfc;
+    padding: 24px 20px;
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.step-card:hover {
+    border-style: solid;
+    background-color: #f2fbf4;
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.1);
+}
+
+.step-number {
+    width: 42px;
+    height: 42px;
+    line-height: 42px;
+    border-radius: 50%;
+    background-color: var(--bsu-green);
+    color: #ffffff;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3);
+}
+
+.badge-organik {
+    background-color: var(--bsu-green-subtle);
+    color: var(--bsu-green-dark);
+    font-weight: 600;
+}
+
+.badge-anorganik {
+    background-color: #e9ecef;
+    color: var(--bsu-dark);
+    font-weight: 600;
+}
+
+.category-pill {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* --- 9. DASHBOARD PROFILE & FINANSIAL (HARMONIS WARNA HIJAU/DARK) --- */
+.profile-card {
+    background: #ffffff;
+    border-radius: var(--bsu-radius-lg);
+    border: 1px solid var(--bsu-card-border);
+    box-shadow: var(--bsu-shadow-sm);
+}
+
+.stat-card-custom {
+    border-radius: var(--bsu-radius-md);
+    padding: 22px;
+    color: #ffffff;
+    box-shadow: var(--bsu-shadow-sm);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-card-custom:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--bsu-shadow-md);
+}
+
+.stat-card-custom::after {
+    content: '';
+    position: absolute;
+    right: -20px;
+    bottom: -20px;
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 50%;
+}
+
+/* Skema warna kartu profil: hijau utama & dark navy seragam */
+.stat-card-green {
+    background: linear-gradient(135deg, #28a745, #1e7e34);
+}
+
+.stat-card-emerald {
+    background: linear-gradient(135deg, #198754, #146c43);
+}
+
+.stat-card-forest {
+    background: linear-gradient(135deg, #20c997, #198754);
+}
+
+.stat-card-dark {
+    background: linear-gradient(135deg, #2c3e50, #1a252f);
+}
+
+/* Backward compatibility */
+.stat-card-blue {
+    background: linear-gradient(135deg, #198754, #146c43);
+}
+
+.stat-card-orange {
+    background: linear-gradient(135deg, #20c997, #198754);
+}
+
+/* --- 10. TESTIMONIAL & STRUKTUR ORGANISASI --- */
+.testimonial-card {
+    background: #ffffff;
+    border-radius: var(--bsu-radius-md);
+    border: 1px solid var(--bsu-card-border);
+    padding: 26px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--bsu-shadow-sm);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--bsu-shadow-md);
+    border-color: var(--bsu-green);
+}
+
+.star-rating {
+    color: #ffc107;
+    font-size: 0.9rem;
+}
+
+.org-card {
+    background: #ffffff;
+    border: 1px solid var(--bsu-card-border);
+    border-radius: var(--bsu-radius-md);
+    padding: 22px 18px;
+    text-align: center;
+    box-shadow: var(--bsu-shadow-sm);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    height: 100%;
+    border-top: 4px solid var(--bsu-green);
+}
+
+.org-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(40, 167, 69, 0.12);
+    border-color: var(--bsu-green);
+}
+
+.org-role-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    background-color: var(--bsu-green-light);
+    color: var(--bsu-green-dark);
+}
+
+.org-level-pimpinan {
+    border-top: 4px solid var(--bsu-green-dark);
+    background: linear-gradient(180deg, #f6fcf8 0%, #ffffff 100%);
+}
+
+.org-level-ketua {
+    border-top: 4px solid var(--bsu-green);
+    background: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%);
+}
+
+.org-level-sekretariat,
+.org-level-bendahara,
+.org-level-divisi {
+    border-top: 4px solid var(--bsu-green);
+    background: linear-gradient(180deg, #fafdfb 0%, #ffffff 100%);
+}
+
+.org-tree-line {
+    width: 2px;
+    height: 25px;
+    background: #cbd5e1;
+    margin: 0 auto;
+}
+
+.org-divider-title {
+    position: relative;
+    text-align: center;
+    margin: 35px 0 25px 0;
+}
+
+.org-divider-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--bsu-card-border);
+    z-index: 1;
+}
+
+.org-divider-title span {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    padding: 6px 20px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--bsu-dark);
+    border: 1px solid var(--bsu-green);
+    box-shadow: var(--bsu-shadow-sm);
+}
+
+/* Galeri 4:3 Aspect Ratio */
+.gallery-img-4-3 {
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    object-fit: cover;
+    border-radius: var(--bsu-radius-md);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gallery-img-4-3:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* About Dark Section */
+.about-dark {
+    background: linear-gradient(135deg, var(--bsu-dark) 0%, var(--bsu-dark-secondary) 100%);
+    color: #ffffff;
+    padding: 80px 0;
+    border-top: 3px solid var(--bsu-green);
+    border-bottom: 3px solid var(--bsu-green);
+}
+
+/* --- 11. FOOTER (KONSISTEN & SERAGAM DI SEMUA HALAMAN) --- */
+footer {
+    background-color: var(--bsu-dark);
+    color: #ffffff;
+    padding: 55px 0 25px 0;
+    margin-top: auto;
+    border-top: 3px solid var(--bsu-green);
+}
+
+footer h5 {
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    position: relative;
+    padding-bottom: 8px;
+}
+
+footer h5::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 35px;
+    height: 2.5px;
+    background-color: var(--bsu-green);
+    border-radius: 2px;
+}
+
+footer ul.list-unstyled li a {
+    color: rgba(255, 255, 255, 0.8) !important;
+    text-decoration: none;
+    transition: color 0.2s ease, padding-left 0.2s ease;
+    display: inline-block;
+}
+
+footer ul.list-unstyled li a:hover {
+    color: #68ff8b !important;
+    padding-left: 4px;
+}
+
+.footer-highlight-box {
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid var(--bsu-green);
+    border-radius: var(--bsu-radius-sm);
+    padding: 14px 16px;
+}
+
+footer .social-icons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+footer .social-icons a:hover {
+    background-color: var(--bsu-green);
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+
+/* Responsif Mobile */
+@media (max-width: 768px) {
+    .service-card {
+        margin-bottom: 15px;
+    }
+    .stats-box {
+        margin-top: 15px !important;
+    }
+    .carousel-item img {
+        height: 280px;
+    }
+    .banner-content-custom {
+        padding: 40px 15px;
+    }
+}
