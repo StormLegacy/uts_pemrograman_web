@@ -86,7 +86,7 @@ require_once 'koneksi.php';
                 <span class="badge bg-success-subtle text-success px-3 py-2 text-uppercase fw-bold mb-2">Profil Organisasi</span>
                 <h2 class="fw-bold text-dark mb-3">Solusi Berkelanjutan Pengelolaan Sampah Kampus Parantambung</h2>
                 <p class="text-secondary lh-lg mb-3">
-                    <strong>Bank Sampah Unit (BSU) FMIPA UNM</strong> diresmikan pada hari Rabu, 10 Juni 2026 sebagai sarana pengelolaan sampah mandiri dan terintegrasi di lingkungan Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Negeri Makassar.
+                    <strong>Bank Sampah Unit (BSU) FMIPA UNM</strong> diresmikan pada hari Rabu, 9 Juni 2026 sebagai sarana pengelolaan sampah mandiri dan terintegrasi di lingkungan Fakultas Matematika dan Ilmu Pengetahuan Alam Universitas Negeri Makassar.
                 </p>
                 <p class="text-secondary lh-lg mb-4">
                     Berangkat dari kesadaran pentingnya kelestarian lingkungan dan implementasi <em>Sustainable Development Goals (SDGs)</em>, BSU FMIPA UNM hadir mengadopsi model ekonomi sirkular yang mengubah paradigma sampah dari beban lingkungan menjadi sumber daya bernilai ekonomis dan ekologis bagi seluruh civitas akademika.
